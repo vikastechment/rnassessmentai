@@ -1,11 +1,8 @@
 import React from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
-    StatusBar,
     Alert,
 } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
@@ -29,25 +26,20 @@ export default class HomeComponent extends React.Component {
         }
     }
     onSubmitClick = () => {
-        // console.log("onSubmitCLick : "+this.state.astroidId);
         this.getAsteroidDetailById(this.state.astroidId);
     }
     onRandomAsteroidClick = () => {
-        // console.log("onRandomAsteroidClick")
         this.getRandomAsteroidId();
     }
 
     getAsteroidDetailById(astroidId) {
         fetch("https://api.nasa.gov/neo/rest/v1/neo/" + astroidId + "?api_key=" + apiKey)
             .then(res => res.json())
-            .then(response => {
-                console.log(response);
-                // this.props.navigation.navigate("Detail",{detail:response});
+            .then((response) => {
+                this.props.navigation.navigate("Detail", { detail: response });
 
             }).catch(error => {
-                console.log("error");
                 Alert.alert("", "Incorrect Asteroid Id Entered");
-
             })
     }
 
@@ -55,14 +47,11 @@ export default class HomeComponent extends React.Component {
     getRandomAsteroidId = () => {
         fetch("https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=" + apiKey)
             .then(res => res.json())
-            .then(response => {
-                console.log(response);
-                var index = Math.floor(Math.random * Math.floor(response.page.size - 1));
-                console.log("ateroid id " + response.near_earth_objects[index].id);
-                // this.getAsteroidDetailById(response.near_earth_objects[index].id);
+            .then((response) => {
+                var randomIndex = Math.floor(Math.random() * Math.floor(response.page.size - 1));
+                this.getAsteroidDetailById(response.near_earth_objects[randomIndex].id);
 
-            }).catch(error => {
-                console.log("error" + error);
+            }).catch((error) => {
                 Alert.alert("", "Something went wrong");
 
             })
